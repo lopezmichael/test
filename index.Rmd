@@ -1,19 +1,20 @@
 --- 
-title: "Census Tract Comparison"
-author: "Child Poverty Action Lab"
+title: "Census Tract Comparison Map"
+#author: "Child Poverty Action Lab"
 site: bookdown::bookdown_site
 documentclass: book
 bibliography: [book.bib, packages.bib]
 biblio-style: apalike
 link-citations: yes
-description: "This is a minimal example of using the bookdown package to write a book. The output format for this example is bookdown::gitbook."
+#description: "This is a minimal example of using the bookdown package to write a book. The output format for this example is bookdown::gitbook."
 github-repo: childpovertyactionlab/tractmap
 favicon: "images/favicon.ico"
 ---
 
-# Census Tract Map {-}
+# Tract Changes {-}
 
-Comparison of 2010 Census Tract boundaries for North Texas 4County and 2020 Census Tract boundaries.
+The map below contains a comparison of official 2010 and 202 Census Tract boundaries within the eight North Texas counties surrounding Dallas County.
+
 ```{r, include = FALSE, echo=FALSE, warning=FALSE}
 #rm(list=ls(all=TRUE))
 library(tidyverse)
