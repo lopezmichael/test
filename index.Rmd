@@ -1,0 +1,71 @@
+--- 
+title: "Census Tract Comparison"
+author: "Child Poverty Action Lab"
+site: bookdown::bookdown_site
+documentclass: book
+bibliography: [book.bib, packages.bib]
+biblio-style: apalike
+link-citations: yes
+description: "This is a minimal example of using the bookdown package to write a book. The output format for this example is bookdown::gitbook."
+github-repo: childpovertyactionlab/tractmap
+favicon: "images/favicon.ico"
+---
+
+# Census Tract Map {-}
+
+Comparison of 2010 Census Tract boundaries for North Texas 4County and 2020 Census Tract boundaries.
+```{r, include = FALSE, echo=FALSE, warning=FALSE}
+#rm(list=ls(all=TRUE))
+library(tidyverse)
+library(tigris)
+library(leaflet)
+library(leaflet.extras)
+library(htmltools)
+
+tract2010 <- tracts(state = "TX") %>%
+  filter(COUNTYFP %in% c("085", "113", "439", "121"))
+tract2020 <- tracts(state = "TX", cb = TRUE, year = 2020) %>%
+  filter(COUNTYFP %in% c("085", "113", "439", "121"))
+
+county <- counties(state = "TX") %>%
+  filter(NAME %in% c("Dallas", "Collin", "Tarrant", "Denton"))
+#mapbox <- "https://api.mapbox.com/styles/v1/owencpal/ckecb71jp22ct19qc1id28jku/tiles/256/%7Bz%7D/%7Bx%7D/%7By%7D@2x?access_token=pk.eyJ1Ijoib3dlbmNwYWwiLCJhIjoiY2tlYnR3emdxMGNhZzMwb2EzZWR4ajloNCJ9.P7Mujz8F3Rssq5-Q6dcvMw.png"
+
+maprender <- leaflet() %>%
+  setView(lng = -97.026, lat = 32.918, zoom = 9) %>%
+  addProviderTiles(providers$CartoDB.Positron) %>%
+  addPolygons(data = tract2020,
+              stroke = TRUE,
+              weight = 2,
+              opacity = 1,
+              smoothFactor = 0.2,
+              fillOpacity = 0,
+              color = "#000000",
+              group = "2020 Tracts",
+              popup = ~htmlEscape(NAMELSAD)) %>%
+  addPolygons(data = tract2010, 
+              stroke = TRUE,
+              weight = 2,
+              opacity = 1,
+              smoothFactor = 0.2,
+              fillOpacity = 0,
+              color = "#ec008c",
+              group = "2010 Tracts",
+              popup = ~htmlEscape(NAMELSAD)) %>%
+  addPolygons(data = county,
+              stroke = TRUE,
+              weight = 6,
+              opacity = 1,
+              color = "#000000",
+              fillOpacity = 0,
+              group = "County") %>%
+  addLayersControl(baseGroups = "County",
+                   overlayGroups = c("2010 Tracts", "2020 Tracts"),
+                   options = layersControlOptions(collapsed = FALSE)) %>%
+  addFullscreenControl(pseudoFullscreen = TRUE)
+```
+
+```{r, warning=FALSE, echo=FALSE, fig.height=9}
+maprender
+```
+
